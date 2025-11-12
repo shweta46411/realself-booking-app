@@ -1,0 +1,22 @@
+@import "tailwindcss";
+
+:root {
+  --realself-orange: #FF6B35;
+  --realself-pink: #FF838A;
+  --realself-bg: #FDF2EE;
+  --realself-black: #000000;
+}
+
+@theme inline {
+  --color-realself-orange: var(--realself-orange);
+  --color-realself-pink: var(--realself-pink);
+  --color-realself-bg: var(--realself-bg);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: #ffffff;
+  color: #000000;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+}

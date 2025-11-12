@@ -1,0 +1,13 @@
+services:
+  - type: web
+    name: realself-booking-app
+    env: node
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      # Add your Resend API key in Render dashboard (Environment Variables section)
+      # RESEND_API_KEY: re_your_key_here
+      # RESEND_FROM_EMAIL: onboarding@resend.dev
+
