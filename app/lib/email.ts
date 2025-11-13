@@ -94,18 +94,43 @@ If you need to make any changes, please contact us as soon as possible.
   try {
     const fromEmail = process.env.RESEND_FROM_EMAIL || 'onboarding@resend.dev';
     
-    await resend.emails.send({
-      from: `RealSelf <${fromEmail}>`,
-      to: email,
+    // For Resend free tier: can only send to account email
+    // In production, verify a domain to send to any email
+    const accountEmail = process.env.RESEND_ACCOUNT_EMAIL || 'shweta.sharma0394@gmail.com';
+    const recipientEmail = process.env.NODE_ENV === 'production' && !fromEmail.includes('resend.dev') 
+      ? email 
+      : accountEmail; // Use account email for testing with onboarding@resend.dev
+    
+    const result = await resend.emails.send({
+      from: fromEmail,
+      to: recipientEmail,
       subject: 'Booking Confirmation - RealSelf',
       html: emailHtml,
       text: emailText,
     });
 
-    console.log(`✅ Confirmation email sent to ${email}`);
+    if (result.error) {
+      console.error('Resend API error:', result.error);
+      // If it's a validation error about recipient, log it but don't fail completely
+      if (result.error.message?.includes('can only send testing emails')) {
+        console.warn('⚠️ Resend free tier limitation: Can only send to account email. Booking still created.');
+        console.warn('💡 To send to any email, verify a domain at resend.com/domains');
+      }
+      return false;
+    }
+
+    if (recipientEmail !== email) {
+      console.log(`✅ Confirmation email sent to ${recipientEmail} (account email - Resend free tier limitation)`);
+      console.log(`📝 Note: To send to ${email}, verify a domain in Resend dashboard`);
+    } else {
+      console.log(`✅ Confirmation email sent to ${email}`);
+    }
     return true;
   } catch (error) {
     console.error('Failed to send email:', error);
+    if (error instanceof Error) {
+      console.error('Error details:', error.message);
+    }
     return false;
   }
 }

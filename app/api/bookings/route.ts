@@ -52,7 +52,7 @@ export async function POST(request: Request) {
       timeslotId: slot.id,
     };
 
-    await sendBookingConfirmationEmail({
+    const emailSent = await sendBookingConfirmationEmail({
       name: sanitizedName,
       email: sanitizedEmail,
       serviceName,
@@ -60,10 +60,15 @@ export async function POST(request: Request) {
       duration: service?.duration || '',
     });
 
+    if (!emailSent) {
+      console.error('Failed to send confirmation email, but booking was created');
+    }
+
     return NextResponse.json(
       {
         success: true,
         booking: bookingData,
+        emailSent,
       },
       { status: 201 }
     );
