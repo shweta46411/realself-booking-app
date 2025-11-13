@@ -23,7 +23,7 @@ describe('BookingForm', () => {
   });
 
   it('renders form with all fields', () => {
-    const { container } = render(<BookingForm service={mockService} timeslots={mockTimeslots} />);
+    render(<BookingForm service={mockService} timeslots={mockTimeslots} />);
     
     expect(screen.getByText('Select a Timeslot')).toBeInTheDocument();
     const nameInputs = screen.getAllByLabelText(/name/i);
