@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { bookingSchema } from '@/app/lib/validation';
 import { getTimeslots, markSlotAsBooked } from '@/app/lib/timeslots';
-import { sendBookingConfirmationEmail } from '@/app/lib/email';
 import { services } from '@/app/lib/data';
 
 export async function POST(request: Request) {
@@ -52,23 +51,10 @@ export async function POST(request: Request) {
       timeslotId: slot.id,
     };
 
-    const emailSent = await sendBookingConfirmationEmail({
-      name: sanitizedName,
-      email: sanitizedEmail,
-      serviceName,
-      timeslot: slot.time,
-      duration: service?.duration || '',
-    });
-
-    if (!emailSent) {
-      console.error('Failed to send confirmation email, but booking was created');
-    }
-
     return NextResponse.json(
       {
         success: true,
         booking: bookingData,
-        emailSent,
       },
       { status: 201 }
     );
