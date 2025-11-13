@@ -10,13 +10,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
   ({ label, error, className = '', required, ...props }, ref) => {
     const id = useId();
     const inputId = props.id || id;
+    const errorId = `${inputId}-error`;
 
     return (
       <div className="w-full">
         {label && (
           <label htmlFor={inputId} className="block text-sm sm:text-base font-semibold text-black mb-2">
             {label}
-            {required && <span className="text-[#FF838A] ml-1">*</span>}
+            {required && <span className="text-[#FF838A] ml-1" aria-label="required">*</span>}
           </label>
         )}
         <input
@@ -24,6 +25,8 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           id={inputId}
           required={required}
           aria-required={required}
+          aria-invalid={error ? 'true' : 'false'}
+          aria-describedby={error ? errorId : undefined}
           className={`w-full px-4 sm:px-5 py-3 sm:py-3.5 border-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:border-[#FF6B35] text-sm sm:text-base ${
             error
               ? 'border-[#FF838A] focus:ring-[#FF838A]'
@@ -32,7 +35,9 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
           {...props}
         />
         {error && (
-          <p className="mt-2 text-sm font-medium text-[#FF838A]">{error}</p>
+          <p id={errorId} className="mt-2 text-sm font-medium text-[#FF838A]" role="alert">
+            {error}
+          </p>
         )}
       </div>
     );

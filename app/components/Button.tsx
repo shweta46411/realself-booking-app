@@ -2,7 +2,7 @@ import { ButtonHTMLAttributes, ReactNode } from 'react';
 
 interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: ReactNode;
-  variant?: 'primary' | 'secondary';
+  variant?: 'primary' | 'secondary' | 'outline';
   isLoading?: boolean;
 }
 
@@ -18,15 +18,26 @@ export default function Button({
   
   const styles = variant === 'primary'
     ? 'bg-[#FF6B35] text-white hover:bg-[#FF5722] focus:ring-[#FF6B35]'
+    : variant === 'outline'
+    ? 'bg-transparent text-[#FF6B35] border-2 border-[#FF6B35] hover:bg-[#FF6B35] hover:text-white focus:ring-[#FF6B35]'
     : 'bg-white text-black border-2 border-black hover:bg-black hover:text-white focus:ring-black';
 
   return (
     <button
       className={`${base} ${styles} ${className}`}
       disabled={disabled || isLoading}
+      aria-busy={isLoading}
+      aria-disabled={disabled || isLoading}
       {...props}
     >
-      {isLoading ? 'Loading...' : children}
+      {isLoading ? (
+        <span aria-live="polite" aria-atomic="true">
+          <span className="sr-only">Loading</span>
+          Loading...
+        </span>
+      ) : (
+        children
+      )}
     </button>
   );
 }

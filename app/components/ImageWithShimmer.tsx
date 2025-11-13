@@ -10,6 +10,8 @@ interface ImageWithShimmerProps {
   height: number;
   className?: string;
   containerClassName?: string;
+  priority?: boolean;
+  sizes?: string;
 }
 
 export default function ImageWithShimmer({
@@ -19,6 +21,8 @@ export default function ImageWithShimmer({
   height,
   className = '',
   containerClassName = '',
+  priority = false,
+  sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
 }: ImageWithShimmerProps) {
   const [isLoading, setIsLoading] = useState(true);
   const [hasError, setHasError] = useState(false);
@@ -42,7 +46,9 @@ export default function ImageWithShimmer({
         width={width}
         height={height}
         className={`${className} ${isLoading ? 'opacity-0' : 'opacity-100'} transition-opacity duration-300`}
-        unoptimized
+        priority={priority}
+        sizes={sizes}
+        loading={priority ? undefined : 'lazy'}
         onLoad={() => setIsLoading(false)}
         onError={() => {
           setIsLoading(false);

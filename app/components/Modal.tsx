@@ -82,6 +82,7 @@ export default function Modal({
       role="dialog"
       aria-modal="true"
       aria-labelledby={title ? 'modal-title' : undefined}
+      aria-describedby="modal-description"
     >
       <div
         ref={modalRef}
@@ -114,7 +115,7 @@ export default function Modal({
             </button>
           </div>
         )}
-        <div className="p-4 sm:p-6">{children}</div>
+        <div id="modal-description" className="p-4 sm:p-6">{children}</div>
       </div>
     </div>
   );

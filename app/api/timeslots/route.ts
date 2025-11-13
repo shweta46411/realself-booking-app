@@ -15,5 +15,12 @@ export async function GET(request: Request) {
     return NextResponse.json({ error: 'Service not found' }, { status: 404 });
   }
 
-  return NextResponse.json({ timeslots: serviceTimeslots });
+  return NextResponse.json(
+    { timeslots: serviceTimeslots },
+    {
+      headers: {
+        'Cache-Control': 'public, s-maxage=60, stale-while-revalidate=300',
+      },
+    }
+  );
 }

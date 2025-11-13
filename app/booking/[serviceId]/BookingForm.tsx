@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { bookingSchema, BookingFormData } from '@/app/lib/validation';
@@ -17,6 +18,7 @@ interface BookingFormProps {
 }
 
 export default function BookingForm({ service, timeslots: initialTimeslots }: BookingFormProps) {
+  const router = useRouter();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentTimeslots, setCurrentTimeslots] = useState<Timeslot[]>(initialTimeslots);
@@ -124,20 +126,25 @@ export default function BookingForm({ service, timeslots: initialTimeslots }: Bo
     setIsModalOpen(false);
     reset();
     setError(null);
+    router.push('/');
   };
 
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)} className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 sm:p-6 md:p-7 space-y-4 sm:space-y-5">
         <fieldset disabled={isSubmitting}>
-        <div>
-          <label className="block text-base sm:text-lg font-semibold text-black mb-3 sm:mb-4">
-            Select a Timeslot
-            <span className="text-[#FF838A] ml-1">*</span>
-          </label>
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3 sm:gap-4">
+          <fieldset className="border-0 p-0 m-0">
+            <legend className="block text-base sm:text-lg font-semibold text-black mb-3 sm:mb-4">
+              Select a Timeslot
+              <span className="text-[#FF838A] ml-1" aria-label="required">*</span>
+            </legend>
+          <div 
+            className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3 sm:gap-4"
+            role="group"
+            aria-label="Available timeslots"
+          >
             {currentTimeslots.length === 0 ? (
-              <p className="col-span-full text-gray-500 text-base">
+              <p className="col-span-full text-gray-500 text-base" role="status">
                 No available timeslots
               </p>
             ) : (
@@ -151,28 +158,30 @@ export default function BookingForm({ service, timeslots: initialTimeslots }: Bo
                     type="button"
                     onClick={() => handleTimeslotSelect(slot.id)}
                     disabled={isBooked}
-                    className={`px-3 py-2.5 sm:px-4 sm:py-3 md:px-5 md:py-3 rounded-xl border-2 transition-all text-sm sm:text-base font-semibold ${
+                    aria-pressed={isSelected ? 'true' : 'false'}
+                    aria-disabled={isBooked}
+                    aria-label={isBooked ? `${slot.time} - Already booked` : `${slot.time} - Available`}
+                    className={`px-3 py-2.5 sm:px-4 sm:py-3 md:px-5 md:py-3 rounded-xl border-2 transition-all text-sm sm:text-base font-semibold focus:outline-none focus:ring-2 focus:ring-[#FF6B35] focus:ring-offset-2 ${
                       isBooked
                         ? 'border-gray-200 bg-gray-100 text-gray-400 cursor-not-allowed opacity-60'
                         : isSelected
                         ? 'border-[#FF6B35] bg-[#FF6B35] text-white shadow-md'
                         : 'border-gray-300 hover:border-[#FF838A] text-black hover:text-[#FF838A]'
                     }`}
-                    title={isBooked ? 'Already booked' : undefined}
                   >
                     {slot.time}
-                    {isBooked && <span className="ml-1 text-xs">(Booked)</span>}
+                    {isBooked && <span className="ml-1 text-xs" aria-hidden="true">(Booked)</span>}
                   </button>
                 );
               })
             )}
           </div>
           {errors.timeslot && (
-            <p className="mt-2 text-sm font-medium text-[#FF838A]" role="alert">
+            <p className="mt-2 text-sm font-medium text-[#FF838A]" role="alert" id="timeslot-error">
               {errors.timeslot.message}
             </p>
           )}
-        </div>
+          </fieldset>
 
         <Input
           label="Name"
@@ -196,7 +205,7 @@ export default function BookingForm({ service, timeslots: initialTimeslots }: Bo
         />
 
         {error && error.trim() ? (
-          <div className="p-3 sm:p-4 bg-red-50 border-2 border-[#FF838A] rounded-lg">
+          <div className="p-3 sm:p-4 bg-red-50 border-2 border-[#FF838A] rounded-lg" role="alert" aria-live="assertive">
             <p className="text-sm font-semibold text-red-700">{error}</p>
           </div>
         ) : null}

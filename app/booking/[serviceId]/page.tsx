@@ -49,6 +49,8 @@ export default async function BookingPage({
             height={400}
             className="w-full h-full object-cover"
             containerClassName="w-full h-full"
+            priority
+            sizes="100vw"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent pointer-events-none" />
           <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 md:p-8 text-white">
