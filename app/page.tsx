@@ -1,5 +1,5 @@
 import Link from 'next/link';
-import Image from 'next/image';
+import ImageWithShimmer from './components/ImageWithShimmer';
 import { services } from './lib/data';
 
 export default function Home() {
@@ -24,15 +24,15 @@ export default function Home() {
             >
               {service.imageUrl && (
                 <div className="relative w-full h-48 sm:h-56 md:h-60 overflow-hidden bg-gray-100">
-                  <Image
+                  <ImageWithShimmer
                     src={service.imageUrl}
                     alt={service.name}
                     width={800}
                     height={600}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    unoptimized
+                    containerClassName="w-full h-full"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent" />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/10 to-transparent pointer-events-none" />
                 </div>
               )}
               <div className="p-5 sm:p-6 md:p-7">

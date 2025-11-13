@@ -1,5 +1,5 @@
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
+import ImageWithShimmer from '@/app/components/ImageWithShimmer';
 import { services } from '@/app/lib/data';
 import { getBaseUrl, fetchWithTimeout } from '@/app/lib/api';
 import { REQUEST_TIMEOUT } from '@/app/lib/constants';
@@ -42,15 +42,15 @@ export default async function BookingPage({
     <div className="min-h-screen bg-white">
       {service.imageUrl && (
         <div className="relative w-full h-56 sm:h-64 md:h-72 overflow-hidden">
-          <Image
+          <ImageWithShimmer
             src={service.imageUrl}
             alt={service.name}
             width={1200}
             height={400}
             className="w-full h-full object-cover"
-            unoptimized
+            containerClassName="w-full h-full"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/50 via-black/30 to-transparent pointer-events-none" />
           <div className="absolute bottom-0 left-0 right-0 p-5 sm:p-6 md:p-8 text-white">
             <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-2 tracking-tight drop-shadow-lg">
               Book {service.name}
