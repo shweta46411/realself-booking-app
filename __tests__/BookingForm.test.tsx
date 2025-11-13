@@ -1,7 +1,20 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
-import BookingForm from '@/app/booking/[serviceId]/BookingForm';
 import { Service, Timeslot } from '@/app/lib/types';
+
+const mockPush = vi.fn();
+const mockReplace = vi.fn();
+const mockPrefetch = vi.fn();
+
+vi.mock('next/navigation', () => ({
+  useRouter: () => ({
+    push: mockPush,
+    replace: mockReplace,
+    prefetch: mockPrefetch,
+  }),
+}));
+
+import BookingForm from '@/app/booking/[serviceId]/BookingForm';
 
 const mockService: Service = {
   id: 'facial',
@@ -20,6 +33,9 @@ global.fetch = vi.fn();
 describe('BookingForm', () => {
   beforeEach(() => {
     vi.clearAllMocks();
+    mockPush.mockClear();
+    mockReplace.mockClear();
+    mockPrefetch.mockClear();
   });
 
   it('renders form with all fields', () => {

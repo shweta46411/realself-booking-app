@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { bookingSchema } from '@/app/lib/validation';
 import { getTimeslots, markSlotAsBooked } from '@/app/lib/timeslots';
-import { services } from '@/app/lib/data';
 
 export async function POST(request: Request) {
   try {
@@ -36,9 +35,6 @@ export async function POST(request: Request) {
     }
 
     markSlotAsBooked(serviceId, slot.id);
-
-    const service = services.find((s) => s.id === serviceId);
-    const serviceName = service?.name || 'Service';
 
     const sanitizedName = validated.data.name.trim().replace(/\s+/g, ' ');
     const sanitizedEmail = validated.data.email.trim().toLowerCase();
